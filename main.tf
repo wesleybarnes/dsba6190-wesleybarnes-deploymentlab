@@ -40,8 +40,8 @@ resource "azurerm_storage_account" "storage" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
-  tags = local.tags
-  is_hns_enabled           = true
+  tags           = local.tags
+  is_hns_enabled = true
 }
 
 // Virtual Network
