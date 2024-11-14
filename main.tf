@@ -58,7 +58,7 @@ resource "azurerm_virtual_network" "vn" {
 resource "azurerm_subnet" "subnet" {
   name                 = "vnet-${var.class_name}${var.student_name}${var.environment}${random_integer.deployment_id_suffix.result}"
   resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.rg.name
+  virtual_network_name = azurerm_virtual_network.vn.name
   address_prefixes     = ["10.0.2.0/24"]
   service_endpoints    = ["Microsoft.Sql"]
 }
@@ -78,7 +78,7 @@ resource "azurerm_mssql_server" "sqlserver" {
 
 resource "azurerm_mssql_database" "database" {
   name         = "db-${var.class_name}${var.student_name}${var.environment}${random_integer.deployment_id_suffix.result}"
-  server_id    = azurerm_mssql_server.rg.id
+  server_id    = azurerm_mssql_server.sqlserver.id
   collation    = "SQL_Latin1_General_CP1_CI_AS"
   license_type = "LicenseIncluded"
   max_size_gb  = 2
@@ -94,6 +94,6 @@ resource "azurerm_mssql_database" "database" {
 
 resource "azurerm_mssql_virtual_network_rule" "network-rule" {
   name      = "sql-vnet-rule"
-  server_id = azurerm_mssql_server.rg.id
-  subnet_id = azurerm_subnet.rg.id
+  server_id = azurerm_mssql_server.sqlserver.id
+  subnet_id = azurerm_subnet.subnet.id 
 }
